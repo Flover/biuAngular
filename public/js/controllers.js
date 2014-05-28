@@ -4,22 +4,23 @@
 var socket = io.connect('http://localhost');
 
 angular.module('myApp.controllers', []).
-  controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
-
-    $http({
-      method: 'GET',
-      url: '/api/name'
-    }).
-    success(function (data, status, headers, config) {
-      $scope.name = data.name;
-    }).
-    error(function (data, status, headers, config) {
-      $scope.name = 'Error!';
-    });
+  controller('AppCtrl', ['$scope', function ($scope) {
 
   }]).
   controller('LoginCtrl', ['$scope', function ($scope) {
-    
+    console.log(UserService.isLogged);
+    $scope.username = UserService.username;
+    $scope.logged = !UserService.isLogged;
+    $scope.register = function(){
+      socket.emit('register', $scope.name);
+    };
+    $scope.login = function(){
+      socket.emit('login', $scope.name);
+    };
+    socket.on('logged', function(username){
+      UserService.isLogged = true;
+      UserService.username = username;
+    });
   }]).
   controller('ShowAllCtrl', ['$scope', '$http', function ($scope, $http) {
     socket.emit('getMovies');

@@ -2,10 +2,10 @@ extends layout
 
 block body
   div(ng-controller='LoginCtrl')
-    input#name(type='text', ng-model='name')
-    button#rl Register/Login
+    input#name(type='text', ng-model='name', ng-show='logged')
+    button(ng-click='register()', ng-show='logged') Register
+    button(ng-click='login()', ng-show='logged') Login
   div(ng-controller='AppCtrl')
-    h2 Hello {{name}}
     ul.menu
       li
         a(href='showAll') showAll
