@@ -1,0 +1,8 @@
+input(ng-model='query')
+table
+	tr(ng-repeat='movie in movies | filter:query')
+		td 
+			a(href='show/{{movie.id}}'){{movie.title}}
+		td {{movie.creator}}
+		td {{movie.link}}
+		td {{movie.description}}

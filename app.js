@@ -11,7 +11,9 @@ var express = require('express'),
   routes = require('./routes'),
   api = require('./routes/api'),
   http = require('http'),
-  path = require('path');
+  path = require('path'),
+  mongoose = require('mongoose'),
+  models = require('./model/models');
 
 var app = module.exports = express();
 
@@ -52,6 +54,7 @@ app.get('/partials/:name', routes.partials);
 
 // JSON API
 app.get('/api/name', api.name);
+app.get('/api/movies', api.movies);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
@@ -65,6 +68,25 @@ var server = http.createServer(app);
 
 var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
+  socket.on('getMovies', function(){
+    models.Movie.find({}, function(err, movies){
+      if(err)
+        console.log(err);
+      else
+        socket.emit('allMovies',movies);
+    });
+  });
+
+  socket.on('addNew', function(movie){
+    var newMovie = new models.Movie({title: movie.title, link: movie.link, creator: movie.creator, description: movie.description});
+    newMovie.save(function(err){
+      if(err) 
+        console.log(err)
+      else
+        socket.emit('');
+    });
+  });
+
   socket.on('disconnect',function(){
 
   });

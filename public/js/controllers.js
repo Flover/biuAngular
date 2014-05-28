@@ -1,9 +1,10 @@
 'use strict';
 
 /* Controllers */
+var socket = io.connect('http://localhost');
 
 angular.module('myApp.controllers', []).
-  controller('AppCtrl', function ($scope, $http) {
+  controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $http({
       method: 'GET',
@@ -16,12 +17,45 @@ angular.module('myApp.controllers', []).
       $scope.name = 'Error!';
     });
 
-  }).
-  controller('MyCtrl1', function ($scope) {
-    // write Ctrl here
+  }]).
+  controller('LoginCtrl', ['$scope', function ($scope) {
+    
+  }]).
+  controller('ShowAllCtrl', ['$scope', '$http', function ($scope, $http) {
+    socket.emit('getMovies');
+    console.log($scope)
+    socket.on('allMovies', function(mov){
+      console.log(mov);
+      console.log($scope);
+      $scope.movies = mov;
+    });
+  }]).
+  controller('ShowCtrl', ['$scope','$http','$routeParams', function($scope, $http, $routeParams){
+    
+    socket.on('allMovies', function(movies){
+      $scope.movies = movies;
+    });
+  }]).
+  controller('EditCtrl', ['$scope','$http','$routeParams', function($scope, $http, $routeParams){
+    $http.get('/api/movies').success(function(data){
+      console.log(data);
+      data.forEach(function(el) {
+          if (el.id == $routeParams.id){
+            $scope.movie = el;
+            console.log
+          }
+      });;
+    });
 
-  }).
-  controller('MyCtrl2', function ($scope) {
-    // write Ctrl here
+    $scope.editMovie = function(){
+      socket.emit('editMovie', movie);
+    };
+  }]).
+  controller('AddCtrl',['$scope', '$location', function($scope,$location){
+    $scope.movie;// = {};
 
-  });
+    $scope.addMovie = function(){
+      socket.emit('addNew', movie);
+      $location.path("/showAll");
+    };
+  }]);
