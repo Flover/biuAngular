@@ -2,7 +2,9 @@ input(ng-model='query')
 table
 	tr(ng-repeat='movie in movies | filter:query')
 		td 
-			a(href='show/{{movie.id}}'){{movie.title}}
+			a(href='show/{{movie._id}}'){{movie.title}}
 		td {{movie.creator}}
 		td {{movie.link}}
 		td {{movie.description}}
+		td 
+			button(ng-click='deleteMovie(movie._id)') Usuń

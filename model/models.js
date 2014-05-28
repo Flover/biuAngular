@@ -10,4 +10,9 @@ var movieSchema = new Schema({
 	description: String
 });
 
+var userSchema = new Schema({
+	username: String
+});
+
 exports.Movie = mongoose.model('Movie', movieSchema);
+exports.User = mongoose.model('User', userSchema);
