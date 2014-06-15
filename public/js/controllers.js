@@ -3,26 +3,33 @@
 /* Controllers */
 var socket = io.connect('http://localhost');
 
-angular.module('myApp.controllers', []).
-  controller('AppCtrl', ['$scope', function ($scope) {
+var appControllers = angular.module('appControllers', []);
+  appControllers.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
+    $scope.tab = 1;
 
-  }]).
-  controller('LoginCtrl', ['$scope', function ($scope) {
-    console.log(UserService.isLogged);
-    $scope.username = UserService.username;
-    $scope.logged = !UserService.isLogged;
-    $scope.register = function(){
-      socket.emit('register', $scope.name);
+    $scope.activeTab = function(tab){
+      $scope.tab = tab;
     };
-    $scope.login = function(){
-      socket.emit('login', $scope.name);
+
+    $scope.isActive = function(tab){
+      return $scope.tab === tab;
     };
-    socket.on('logged', function(username){
-      UserService.isLogged = true;
-      UserService.username = username;
+    $http({
+      method: 'GET',
+      url: '/api/name'
+    }).
+    success(function (data, status, headers, config) {
+      $scope.name = data.name;
+    }).
+    error(function (data, status, headers, config) {
+      $scope.name = 'Error!';
     });
-  }]).
-  controller('ShowAllCtrl', ['$scope', '$http', function ($scope, $http) {
+
+  }]);
+  appControllers.controller('LoginCtrl', ['$scope', function ($scope) {
+
+  }]);
+  appControllers.controller('ShowAllCtrl', ['$scope', '$http', function ($scope, $http) {
     socket.emit('getMovies');
     socket.on('allMovies', function(movies){
       $scope.movies = movies;
@@ -35,15 +42,15 @@ angular.module('myApp.controllers', []).
     socket.on('updateMovies', function(){
       socket.emit('getMovies');
     });
-  }]).
-  controller('ShowCtrl', ['$scope','$routeParams', function($scope, $routeParams){
+  }]);
+  appControllers.controller('ShowCtrl', ['$scope','$routeParams', function($scope, $routeParams){
     socket.emit('getMovie',$routeParams.id);
     socket.on('oneMovie', function(movie){
       $scope.movie = movie;
       $scope.$apply();
     });
-  }]).
-  controller('EditCtrl', ['$scope','$routeParams', function($scope, $routeParams){
+  }]);
+  appControllers.controller('EditCtrl', ['$scope','$routeParams', function($scope, $routeParams){
     socket.emit('getMovie',$routeParams.id);
     socket.on('oneMovie', function(movie){
       $scope.movie = movie;
@@ -53,8 +60,8 @@ angular.module('myApp.controllers', []).
     $scope.editMovie = function(){
       socket.emit('editMovie', movie);
     };
-  }]).
-  controller('AddCtrl',['$scope', '$location', function($scope,$location){
+  }]);
+  appControllers.controller('AddCtrl',['$scope', '$location', function($scope,$location){
     $scope.addMovie = function(){
       socket.emit('addNew', $scope.movie);
       $location.path("/showAll");

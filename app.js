@@ -70,13 +70,7 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
   socket.on('login', function(username){
     models.User.findOne({username: username}, function(err, user){
-      if(err)
-        console.log(err);
-      else {
-        socket.username = user.username;
-        socket.join(socket.username);
-        socket.emit('logged',socket.username);
-      }
+
     });
   });
 
@@ -85,34 +79,18 @@ io.sockets.on('connection',function(socket){
     user.save(function(err){
       if(err)
         console.log(err);
-      else{
-        socket.username = user.username;
-        socket.join(socket.username);
-        socket.emit('logged',socket.username);
-      } 
     });
   })
 
   socket.on('getMovies', function(){
-    socket.join(socket.urername);
-    models.Movie.find({username: socket.username}, function(err, movies){
-      if(err)
-        console.log(err);
-      else{
-        socket.emit('allMovies',movies);
-        socket.broadcast.to(socket.username).emit('allMovies',movies);
-      }
-    });
-  });
+    socket.join("all");
 
-  socket.on('getMovies', function(username){
-    socket.join(username);
     models.Movie.find({}, function(err, movies){
       if(err)
         console.log(err);
       else{
         socket.emit('allMovies',movies);
-        socket.broadcast.to(username).emit('allMovies',movies);
+        socket.broadcast.to('all').emit('allMovies',movies);
       }
     });
   });

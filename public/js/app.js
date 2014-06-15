@@ -1,14 +1,13 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-
-angular.module('myApp', [
-  'myApp.controllers',
-  'myApp.filters',
-  'myApp.services',
-  'myApp.directives'
-]).
-config(function ($routeProvider, $locationProvider) {
+var app = angular.module('myApp', [
+  'appControllers',
+  'appFilters',
+  'appServices',
+  'appDirectives'
+]);
+app.config(['$routeProvider','$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider.
     when('/showAll',{
       templateUrl: 'partials/showAllMovies',
@@ -31,4 +30,4 @@ config(function ($routeProvider, $locationProvider) {
     });
 
   $locationProvider.html5Mode(true);
-});
+}]);

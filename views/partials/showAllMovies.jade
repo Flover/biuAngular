@@ -1,10 +1,18 @@
-input(ng-model='query')
-table
-	tr(ng-repeat='movie in movies | filter:query')
-		td 
-			a(href='show/{{movie._id}}'){{movie.title}}
-		td {{movie.creator}}
-		td {{movie.link}}
-		td {{movie.description}}
-		td 
-			button(ng-click='deleteMovie(movie._id)') Usuń
+div.col-md-12
+	div.row
+		label.col-md-4 Search in title:
+			input(ng-model='query.title')
+		label.col-md-4 Search in creator:
+			input(ng-model='query.creator')
+		label.col-md-4 Search in description:
+			input(ng-model='query.description')
+	div.row
+		table.table
+			tr(ng-repeat='movie in movies | filter:query')
+				td
+					a(href='show/{{movie._id}}'){{movie.title}}
+				td {{movie.creator}}
+				td {{movie.link}}
+				td {{movie.description}}
+				td
+					button(ng-click='deleteMovie(movie._id)') Usuń

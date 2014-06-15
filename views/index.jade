@@ -1,18 +1,23 @@
 extends layout
 
 block body
-  div(ng-controller='LoginCtrl')
-    input#name(type='text', ng-model='name', ng-show='logged')
-    button(ng-click='register()', ng-show='logged') Register
-    button(ng-click='login()', ng-show='logged') Login
-  div(ng-controller='AppCtrl')
-    ul.menu
-      li
-        a(href='showAll') showAll
-      li
-        a(href='addNew') addNew
+  div.container
+    div.row(ng-controller='LoginCtrl')
+      input#name.col-md-3(type='text', ng-model='name')
+      button#rl.col-md-2 Register/Login
+    div.row(ng-controller='AppCtrl')
+      div.col-md-12
+        div.row
+          h2.col-md-12 Hello {{name}}
+        div.row
+          div.col-md-12
+            ul.nav.nav-pills
+              li(ng-class="{active:isActive(1)}")
+                a(href='showAll', ng-click="activeTab(1)") showAll
+              li(ng-class="{active:isActive(2)}")
+                a(href='addNew', ng-click="activeTab(2)") addNew
 
-    div(ng-view)
+        div.row(ng-view)
 
   script(src='js/lib/angular/angular.js')
   script(src='/socket.io/socket.io.js')
@@ -21,4 +26,3 @@ block body
   script(src='js/controllers.js')
   script(src='js/filters.js')
   script(src='js/directives.js')
-
