@@ -1,8 +1,17 @@
-table
-	tr
-		td {{movie.title}}
-		td {{movie.creator}}
-		td {{movie.link}}
-		td {{movie.description}}
-		td 
-			a(href='edit/{{movie._id}}') Edytuj
+div.col-md-12
+	div.row
+		div.col-md-2 Tytuł
+		div.col-md-10 {{movie.title}}
+	div.row
+		div.col-md-2 Author
+		div.col-md-10 {{movie.creator}}
+	div.row
+		div.col-md-2 Url
+		div.col-md-10
+			my-youtube
+	div.row
+		div.col-md-2 Description
+		div.col-md-10 {{movie.description}}
+	div.row
+		div.col-md-offset-2.col-md-2
+			a.btn.btn-default(href='edit/{{movie._id}}') Edytuj

@@ -29,7 +29,8 @@ var appControllers = angular.module('appControllers', []);
   appControllers.controller('LoginCtrl', ['$scope', function ($scope) {
 
   }]);
-  appControllers.controller('ShowAllCtrl', ['$scope', '$http', function ($scope, $http) {
+  appControllers.controller('ShowAllCtrl', ['$scope', function ($scope) {
+    $scope.movies = [];
     socket.emit('getMovies');
     socket.on('allMovies', function(movies){
       $scope.movies = movies;
@@ -50,7 +51,7 @@ var appControllers = angular.module('appControllers', []);
       $scope.$apply();
     });
   }]);
-  appControllers.controller('EditCtrl', ['$scope','$routeParams', function($scope, $routeParams){
+  appControllers.controller('EditCtrl', ['$scope','$routeParams', '$location', function($scope, $routeParams, $location){
     socket.emit('getMovie',$routeParams.id);
     socket.on('oneMovie', function(movie){
       $scope.movie = movie;
@@ -58,12 +59,14 @@ var appControllers = angular.module('appControllers', []);
     });
 
     $scope.editMovie = function(){
-      socket.emit('editMovie', movie);
+      console.log("wtf");
+      socket.emit('editMovie', $scope.movie);
+      $location.path('/showAll');
     };
   }]);
   appControllers.controller('AddCtrl',['$scope', '$location', function($scope,$location){
     $scope.addMovie = function(){
       socket.emit('addNew', $scope.movie);
-      $location.path("/showAll");
+      $location.path('/showAll');
     };
   }]);

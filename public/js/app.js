@@ -26,7 +26,7 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       controller: 'AddCtrl'
     }).
     otherwise({
-      redirectTo: '/view1'
+      redirectTo: '/showAll'
     });
 
   $locationProvider.html5Mode(true);

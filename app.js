@@ -80,7 +80,7 @@ io.sockets.on('connection',function(socket){
       if(err)
         console.log(err);
     });
-  })
+  });
 
   socket.on('getMovies', function(){
     socket.join("all");
@@ -102,14 +102,25 @@ io.sockets.on('connection',function(socket){
       else
         socket.emit('oneMovie',movie);
     })
-  })
+  });
 
   socket.on('addNew', function(movie){
     var newMovie = new models.Movie({title: movie.title, link: movie.link, creator: movie.creator, description: movie.description});
     newMovie.save(function(err){
-      if(err) 
+      if(err)
         console.log(err)
       else{
+        socket.emit('updateMovies');
+        socket.broadcast.to('all').emit('updateMovies');
+      }
+    });
+  });
+
+  socket.on('editMovie', function(movie){
+    models.Movie.findOneAndUpdate({_id: movie._id}, {$set: {title: movie.title, link: movie.link, creator: movie.creator, description: movie.description}}, function(err){
+      if(err)
+        console.log(err);
+      else {
         socket.emit('updateMovies');
         socket.broadcast.to('all').emit('updateMovies');
       }
