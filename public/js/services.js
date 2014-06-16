@@ -51,12 +51,16 @@ appServices.factory('AuthService', ['Session', '$rootScope', function(Session, $
     },
     logout: function(){
       Session.destroy();
+      $rootScope.isLogged = false;
+      //$rootScope.$apply();
     },
     isAuthenticated: function () {
       return !!Session.userId;
     },
     isAuthorized: function (authorId) {
-      return authorId === Session.userId;
+      console.log(Session.user.userId);
+      console.log(authorId);
+      return authorId === Session.user.userId;
     }
   };
 }]);

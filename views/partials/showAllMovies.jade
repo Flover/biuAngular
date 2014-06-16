@@ -17,7 +17,7 @@ div.col-md-12
 				td
 					a(href='show/{{movie._id}}'){{movie.title}}
 				td {{movie.creator}}
-				td {{movie.link}}
+				td {{"https://www.youtube.com/embed/"+movie.link}}
 				td {{movie.description}}
 				td
-					button.btn.btn-danger(ng-click='deleteMovie(movie._id)') Usuń
+					button.btn.btn-danger(ng-click='deleteMovie(movie._id)', ng-show='$root.isOwner(movie.userId)') Usuń

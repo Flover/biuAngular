@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 mongoose.connect("mongodb://localhost/biuAngular");
 
 var movieSchema = new Schema({
+	userId: String,
 	title: String,
 	link: String,
 	creator: String,

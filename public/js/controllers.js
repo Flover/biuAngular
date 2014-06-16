@@ -4,7 +4,7 @@
 var socket = io.connect('http://localhost');
 
 var appControllers = angular.module('appControllers', []);
-  appControllers.controller('AppCtrl', ['$scope', 'AuthService', 'Session', '$rootScope', function ($scope, AuthService, Session, $rootScope) {
+  appControllers.controller('AppCtrl', ['$scope', 'AuthService', '$rootScope', function ($scope, AuthService, $rootScope) {
     $scope.tab = 1;
     $rootScope.userSession = {
       username: "",
@@ -12,7 +12,10 @@ var appControllers = angular.module('appControllers', []);
       userId: null
     };
     $rootScope.isLogged = false;
-
+    $rootScope.isOwner = function(userId){
+      console.log(AuthService.isAuthorized(userId));
+      return AuthService.isAuthorized(userId);
+    };
 
     $scope.activeTab = function(tab){
       $scope.tab = tab;
@@ -33,8 +36,13 @@ var appControllers = angular.module('appControllers', []);
     $scope.login = function(){
       AuthService.login($scope.username);
     };
+
+    $scope.logout = function(){
+      AuthService.logout();
+    };
   }]);
-  appControllers.controller('ShowAllCtrl', ['$scope', function ($scope) {
+
+  appControllers.controller('ShowAllCtrl', ['$scope', 'AuthService', function ($scope, AuthService) {
     $scope.movies = [];
     socket.emit('getMovies');
     socket.on('allMovies', function(movies){
@@ -69,9 +77,9 @@ var appControllers = angular.module('appControllers', []);
       $location.path('/showAll');
     };
   }]);
-  appControllers.controller('AddCtrl',['$scope', '$location', function($scope,$location){
+  appControllers.controller('AddCtrl',['$scope', '$location', '$rootScope', function($scope,$location,$rootScope){
     $scope.addMovie = function(){
-      socket.emit('addNew', $scope.movie);
+      socket.emit('addNew', $scope.movie, $rootScope.userSession.userId);
       $location.path('/showAll');
     };
   }]);

@@ -16,7 +16,7 @@ block body
             ul.nav.nav-pills
               li(ng-class="{active:isActive(1)}")
                 a(href='showAll', ng-click="activeTab(1)") showAll
-              li(ng-class="{active:isActive(2)}")
+              li(ng-class="{active:isActive(2)}", ng-show='$root.isLogged')
                 a(href='addNew', ng-click="activeTab(2)") addNew
 
         div.row(ng-view)

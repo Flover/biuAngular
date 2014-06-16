@@ -14,4 +14,4 @@ div.col-md-12
 		div.col-md-10 {{movie.description}}
 	div.row
 		div.col-md-offset-2.col-md-2
-			a.btn.btn-default(href='edit/{{movie._id}}') Edytuj
+			a.btn.btn-default(href='edit/{{movie._id}}', ng-show='$root.isOwner(movie.userId)') Edytuj

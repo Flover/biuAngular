@@ -95,13 +95,13 @@ io.sockets.on('connection',function(socket){
           socket.emit('exists');
         }
         else {
-          var user = new models.User({username: username});
-          user.save(function(err){
+          var newUser = new models.User({username: username});
+          newUser.save(function(err){
             if(err)
               console.log(err);
             else {
               var sessionId = uuid.v4();
-              socket.emit('auth', user, sessionId);
+              socket.emit('auth', newUser, sessionId);
             }
           });
         }
@@ -130,8 +130,8 @@ io.sockets.on('connection',function(socket){
     })
   });
 
-  socket.on('addNew', function(movie){
-    var newMovie = new models.Movie({title: movie.title, link: movie.link, creator: movie.creator, description: movie.description});
+  socket.on('addNew', function(movie, userId){
+    var newMovie = new models.Movie({userId: userId, title: movie.title, link: movie.link, creator: movie.creator, description: movie.description});
     newMovie.save(function(err){
       if(err)
         console.log(err)
