@@ -25,6 +25,14 @@ app.config(['$routeProvider','$locationProvider', function ($routeProvider, $loc
       templateUrl: 'partials/addMovie',
       controller: 'AddCtrl'
     }).
+    when('/showUsers',{
+      templateUrl: 'partials/showUsers',
+      controller: 'ShowUsersCtrl'
+    }).
+    when('/showUser/:id',{
+      templateUrl: 'partials/userClips',
+      controller: 'ShowUserClipsCtrl'
+    }).
     otherwise({
       redirectTo: '/showAll'
     });

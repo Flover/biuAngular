@@ -83,3 +83,17 @@ var appControllers = angular.module('appControllers', []);
       $location.path('/showAll');
     };
   }]);
+  appControllers.controller('ShowUsersCtrl',['$scope', function($scope){
+    socket.emit('getAllUsers');
+    socket.on('allUsers', function(users){
+      $scope.users = users;
+      $scope.$apply();
+    });
+  }]);
+  appControllers.controller('ShowUserClipsCtrl', ['$scope', '$routeParams', function($scope,$routeParams){
+    socket.emit('getUserClips',$routeParams.id);
+    socket.on('userClips', function(movies){
+      $scope.movies = movies;
+      $scope.$apply();
+    });
+  }]);

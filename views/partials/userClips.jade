@@ -1,0 +1,23 @@
+div.col-md-12
+  div.row
+    label.col-md-4 Search in title:
+      input(ng-model='query.title')
+    label.col-md-4 Search in creator:
+      input(ng-model='query.creator')
+    label.col-md-4 Search in description:
+      input(ng-model='query.description')
+  div.row
+    table.table
+      tr
+        th Title
+        th Creator
+        th Link to vid
+        th Description
+      tr(ng-repeat='movie in movies | filter:query')
+        td
+          a(href='show/{{movie._id}}'){{movie.title}}
+        td {{movie.creator}}
+        td {{"https://www.youtube.com/embed/"+movie.link}}
+        td {{movie.description}}
+        td
+          button.btn.btn-danger(ng-click='deleteMovie(movie._id)', ng-show='$root.isOwner(movie.userId)') Usuń

@@ -1,0 +1,13 @@
+div.col-md-12
+  div.row
+    label.col-md-4 Search by username:
+      input(ng-model='query.username')
+  div.row
+    table.table
+      tr
+        th User
+        th Action
+      tr(ng-repeat='user in users | filter:query')
+        td {{user.username}}
+        td
+          a.btn.btn-default(href='showUser/{{user._id}}') Clips

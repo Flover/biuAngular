@@ -164,6 +164,24 @@ io.sockets.on('connection',function(socket){
     });
   });
 
+  socket.on('getAllUsers', function(){
+    models.User.find({}, function(err, users){
+      if (err)
+        console.log(err);
+      else
+        socket.emit('allUsers', users);
+    });
+  });
+
+  socket.on('getUserClips', function(userId){
+    models.Movie.find({userId: userId}, function(err, movies){
+      if (err)
+        console.log(err);
+      else
+        socket.emit('userClips', movies);
+    });
+  });
+
   socket.on('disconnect',function(){
     socket.leave("all");
   });

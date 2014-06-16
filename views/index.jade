@@ -15,9 +15,11 @@ block body
           div.col-md-12
             ul.nav.nav-pills
               li(ng-class="{active:isActive(1)}")
-                a(href='showAll', ng-click="activeTab(1)") showAll
+                a(href='showAll', ng-click="activeTab(1)") Show All Clips
               li(ng-class="{active:isActive(2)}", ng-show='$root.isLogged')
-                a(href='addNew', ng-click="activeTab(2)") addNew
+                a(href='addNew', ng-click="activeTab(2)") Add New Clip
+              li(ng-class="{active:isActive(3)}")
+                a(href='showUsers', ng-click="activeTab(3)") Show All Users
 
         div.row(ng-view)
 
