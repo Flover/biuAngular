@@ -4,8 +4,15 @@
 var socket = io.connect('http://localhost');
 
 var appControllers = angular.module('appControllers', []);
-  appControllers.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
+  appControllers.controller('AppCtrl', ['$scope', 'AuthService', 'Session', '$rootScope', function ($scope, AuthService, Session, $rootScope) {
     $scope.tab = 1;
+    $rootScope.userSession = {
+      username: "",
+      sessionId: null,
+      userId: null
+    };
+    $rootScope.isLogged = false;
+
 
     $scope.activeTab = function(tab){
       $scope.tab = tab;
@@ -14,20 +21,18 @@ var appControllers = angular.module('appControllers', []);
     $scope.isActive = function(tab){
       return $scope.tab === tab;
     };
-    $http({
-      method: 'GET',
-      url: '/api/name'
-    }).
-    success(function (data, status, headers, config) {
-      $scope.name = data.name;
-    }).
-    error(function (data, status, headers, config) {
-      $scope.name = 'Error!';
-    });
 
   }]);
-  appControllers.controller('LoginCtrl', ['$scope', function ($scope) {
+  appControllers.controller('LoginCtrl', ['$scope', 'AuthService', function ($scope, AuthService) {
+    $scope.username = "";
 
+    $scope.register = function(){
+      AuthService.register($scope.username);
+    };
+
+    $scope.login = function(){
+      AuthService.login($scope.username);
+    };
   }]);
   appControllers.controller('ShowAllCtrl', ['$scope', function ($scope) {
     $scope.movies = [];

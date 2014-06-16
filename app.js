@@ -13,7 +13,8 @@ var express = require('express'),
   http = require('http'),
   path = require('path'),
   mongoose = require('mongoose'),
-  models = require('./model/models');
+  models = require('./model/models'),
+  uuid = require('node-uuid');
 
 var app = module.exports = express();
 
@@ -70,15 +71,40 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
   socket.on('login', function(username){
     models.User.findOne({username: username}, function(err, user){
-
+      if(err)
+        console.log(err);
+      else
+        if (user){
+          var sessionId = uuid.v4();
+          socket.emit('auth', user, sessionId);
+        }
+        else {
+          console.log(user);
+          socket.emit('doesntExist');
+        }
     });
   });
 
   socket.on('register', function(username){
-    var user = new models.User({username: username});
-    user.save(function(err){
-      if(err)
+    models.User.findOne({username: username}, function(err, user){
+      if (err)
         console.log(err);
+      else
+        if (user){
+          console.log(user);
+          socket.emit('exists');
+        }
+        else {
+          var user = new models.User({username: username});
+          user.save(function(err){
+            if(err)
+              console.log(err);
+            else {
+              var sessionId = uuid.v4();
+              socket.emit('auth', user, sessionId);
+            }
+          });
+        }
     });
   });
 

@@ -3,12 +3,14 @@ extends layout
 block body
   div.container
     div.row(ng-controller='LoginCtrl')
-      input#name.col-md-3(type='text', ng-model='name')
-      button#rl.col-md-2 Register/Login
+      input#name.col-md-3(type='text', ng-model='username', ng-hide='$root.isLogged')
+      button.btn.btn-default.col-md-1(ng-click="register()", ng-hide='$root.isLogged') Register
+      button.btn.btn-default.col-md-1(ng-click="login()", ng-hide='$root.isLogged') Login
+      button.btn.btn-default.col-md-1(ng-click="logout()", ng-show='$root.isLogged') Logout
     div.row(ng-controller='AppCtrl')
       div.col-md-12
         div.row
-          h2.col-md-12 Hello {{name}}
+          h2.col-md-12 Hello {{$root.userSession.username}}
         div.row
           div.col-md-12
             ul.nav.nav-pills
