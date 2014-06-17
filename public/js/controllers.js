@@ -3,8 +3,8 @@
 /* Controllers */
 var socket = io.connect('http://localhost');
 
-var appControllers = angular.module('appControllers', []);
-  appControllers.controller('AppCtrl', ['$scope', 'AuthService', '$rootScope', function ($scope, AuthService, $rootScope) {
+var appControllers = angular.module('appControllers', ['ngCookies']);
+  appControllers.controller('AppCtrl', ['$scope', 'AuthService', '$rootScope', '$cookieStore', function ($scope, AuthService, $rootScope, $cookieStore) {
     $scope.tab = 1;
     $rootScope.userSession = {
       username: "",
@@ -13,9 +13,14 @@ var appControllers = angular.module('appControllers', []);
     };
     $rootScope.isLogged = false;
     $rootScope.isOwner = function(userId){
-      console.log(AuthService.isAuthorized(userId));
+      //console.log(AuthService.isAuthorized(userId));
       return AuthService.isAuthorized(userId);
     };
+
+    if($cookieStore.get('username')){
+      console.log($cookieStore.get('username'));
+      AuthService.cookieAuth();
+    }
 
     $scope.activeTab = function(tab){
       $scope.tab = tab;

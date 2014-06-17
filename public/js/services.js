@@ -5,7 +5,7 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-var appServices = angular.module('appServices', []);
+var appServices = angular.module('appServices', ['ngCookies']);
 
 appServices.service('Session', function () {
   this.user = {
@@ -28,7 +28,7 @@ appServices.service('Session', function () {
   return this;
 });
 
-appServices.factory('AuthService', ['Session', '$rootScope', function(Session, $rootScope){
+appServices.factory('AuthService', ['Session', '$rootScope', '$cookieStore', function(Session, $rootScope, $cookieStore){
   return {
     login: function(username){
       socket.emit('login', username);
@@ -38,6 +38,9 @@ appServices.factory('AuthService', ['Session', '$rootScope', function(Session, $
       socket.on('auth', function(data,sessionId){
         $rootScope.userSession = Session.create(sessionId, data._id, data.username);
         $rootScope.isLogged = true;
+        $cookieStore.put('username',$rootScope.userSession.username);
+        $cookieStore.put('sessionId',$rootScope.userSession.id);
+        $cookieStore.put('userId',$rootScope.userSession.userId);
         $rootScope.$apply();
       });
     },
@@ -49,11 +52,22 @@ appServices.factory('AuthService', ['Session', '$rootScope', function(Session, $
       socket.on('auth', function(data, sessionId){
         $rootScope.userSession = Session.create(sessionId, data._id, data.username);
         $rootScope.isLogged = true;
+        $cookieStore.put('username',$rootScope.userSession.username);
+        $cookieStore.put('sessionId',$rootScope.userSession.id);
+        $cookieStore.put('userId',$rootScope.userSession.userId);
         $rootScope.$apply();
       });
     },
+    cookieAuth: function(){
+      $rootScope.userSession = Session.create($cookieStore.get('id'),$cookieStore.get('userId'),$cookieStore.get('username'));
+      $rootScope.isLogged = true;
+      $rootScope.$apply();
+    },
     logout: function(){
       Session.destroy();
+      $cookieStore.remove('username');
+      $cookieStore.remove('sessionId');
+      $cookieStore.remove('userId');
       $rootScope.isLogged = false;
       //$rootScope.$apply();
     },
@@ -61,8 +75,8 @@ appServices.factory('AuthService', ['Session', '$rootScope', function(Session, $
       return !!Session.userId;
     },
     isAuthorized: function (authorId) {
-      console.log(Session.user.userId);
-      console.log(authorId);
+      //console.log(Session.user.userId);
+      //console.log(authorId);
       return authorId === Session.user.userId;
     }
   };
