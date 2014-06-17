@@ -64,7 +64,7 @@ var appControllers = angular.module('appControllers', []);
       $scope.$apply();
     });
   }]);
-  appControllers.controller('EditCtrl', ['$scope','$routeParams', '$location', function($scope, $routeParams, $location){
+  appControllers.controller('EditCtrl', ['$scope','$routeParams', '$location', '$rootScope',function($scope, $routeParams, $location, $rootScope){
     socket.emit('getMovie',$routeParams.id);
     socket.on('oneMovie', function(movie){
       $scope.movie = movie;
@@ -76,12 +76,19 @@ var appControllers = angular.module('appControllers', []);
       socket.emit('editMovie', $scope.movie);
       $location.path('/showAll');
     };
+
+    if($rootScope.isLogged === false)
+      $location.path('/showAll');
+
   }]);
   appControllers.controller('AddCtrl',['$scope', '$location', '$rootScope', function($scope,$location,$rootScope){
     $scope.addMovie = function(){
       socket.emit('addNew', $scope.movie, $rootScope.userSession.userId);
       $location.path('/showAll');
     };
+
+    if($rootScope.isLogged === false)
+      $location.path('/showAll');
   }]);
   appControllers.controller('ShowUsersCtrl',['$scope', function($scope){
     socket.emit('getAllUsers');

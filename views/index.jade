@@ -3,7 +3,8 @@ extends layout
 block body
   div.container
     div.row(ng-controller='LoginCtrl')
-      input#name.col-md-3(type='text', ng-model='username', ng-hide='$root.isLogged')
+      div.col-md-2.col-md-offset-8
+        input#name.form-control(type='text', ng-model='username', ng-hide='$root.isLogged', placeholder='Username')
       button.btn.btn-default.col-md-1(ng-click="register()", ng-hide='$root.isLogged') Register
       button.btn.btn-default.col-md-1(ng-click="login()", ng-hide='$root.isLogged') Login
       button.btn.btn-default.col-md-1(ng-click="logout()", ng-show='$root.isLogged') Logout

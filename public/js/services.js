@@ -32,6 +32,9 @@ appServices.factory('AuthService', ['Session', '$rootScope', function(Session, $
   return {
     login: function(username){
       socket.emit('login', username);
+      socket.on('doesntExist', function(){
+        $rootScope.$apply();
+      });
       socket.on('auth', function(data,sessionId){
         $rootScope.userSession = Session.create(sessionId, data._id, data.username);
         $rootScope.isLogged = true;
@@ -41,7 +44,7 @@ appServices.factory('AuthService', ['Session', '$rootScope', function(Session, $
     register: function(username){
       socket.emit('register', username);
       socket.on('exists', function(){
-        console.log('exists');
+        $rootScope.$apply();
       });
       socket.on('auth', function(data, sessionId){
         $rootScope.userSession = Session.create(sessionId, data._id, data.username);
